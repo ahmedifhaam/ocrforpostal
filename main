@@ -1,0 +1,41 @@
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+
+print ("starting...")
+img = cv2.imread('add.jpg')
+grayimg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+retval, globalthresholdingimg = cv2.threshold(grayimg, 127, 255, cv2.THRESH_BINARY)
+meanadaptivethreshimg = cv2.adaptiveThreshold(grayimg, 255, cv2.ADAPTIVE_THRESH_MEAN_C,\
+                                          cv2.THRESH_BINARY,11,2)
+gaussianadaptivethresimg = cv2.adaptiveThreshold(grayimg, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
+                                                 cv2.THRESH_BINARY, 11, 2)
+
+# dst = cv2.fastNlMeansDenoisingColored(gaussianadaptivethresimg, None, 10, 10, 7, 21)
+
+# plt.subplot(331), plt.imshow(img), plt.title('source')
+# plt.subplot(332), plt.imshow('gray image',grayimg)
+
+#working fine
+# cv2.imshow('gray',grayimg);
+cv2.imshow('org',img)
+cv2.imshow('gray',grayimg)
+# cv2.imshow('global',globalthresholdingimg)
+# cv2.imshow('meanadaptive',meanadaptivethreshimg)
+# cv2.imshow('gaussianadaptive',gaussianadaptivethresimg)
+
+
+hist = cv2.calcHist([grayimg], [0], None, [256], [0,256]) #img source,channel array,mask, bin size
+print(hist)
+plt.subplot(221), plt.imshow(grayimg)
+plt.subplot(222), plt.plot(hist)
+# plt.xlim([0, 256])
+plt.show();
+
+
+# plt.subplot(333), plt.imshow(globalthresholdingimg), plt.title('global')
+# plt.subplot(334), plt.imshow(meanadaptivethreshimg), plt.title('mean adaptive')
+# plt.subplot(335), plt.imshow(gaussianadaptivethresimg), plt.title('gaussian adaptive')
+
+# s
+# plt.subplot(224),plt.imshow(dst),plt.title('Destination');
