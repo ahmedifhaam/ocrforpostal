@@ -1,0 +1,3 @@
+[submodule "postalsorting"]
+	path = postalsorting
+	url = https://github.com/ahmedifhaam/postalsorting.git
