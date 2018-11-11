@@ -103,7 +103,17 @@ for y in range(0,rows.__len__()):
         rh,rw = row.shape[:2]
         print(row.shape[:2])
         char = row[0:rh,lefts[x] :rights[x]]
-        cv2.imshow(x.__str__()+"C",char)
+        if(y==2):characters.append(char)
+        # cv2.imshow(x.__str__()+"C",char)
+
+chimg = characters.__getitem__(0)
+cpchimg = np.array(chimg,copy=True)
+cv2.imshow("copy ",cpchimg)
+
+ccvh,ccvw = cpchimg.shape[:2]
+st = ccvw/2
+for y in range(ccvh):
+    for x in range(0)
 
 
 # cv2.namedWindow("final ",cv2.WINDOW_NORMAL)
@@ -113,15 +123,7 @@ cv2.imshow("final",gray_img)
 cv2.resizeWindow("final",600,300)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-# hist = cv2.calcHist([gaussianadaptivethresimg], [0], None, [256], [0,256])
-# plt.subplot(221), plt.imshow(gaussianadaptivethresimg)
-# plt.subplot(222), plt.hist(hist)
-# # plt.xlim([0, cols ])
-# plt.show()
-# # # cv2.imshow("gray",gray_img)
-# # cv2.imshow("gaussian",gaussianadaptivethresimg)
-# # cv2.waitKey()
-# print(hist)
+
 
 
 
