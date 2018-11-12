@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 from collections import deque
-from matplotlib import pyplot as plt
-import pytesseract as tes
+# from matplotlib import pyplot as plt
+# import pytesseract as tes
 
 
 def rotateMat(img):
@@ -44,7 +44,7 @@ gaussianadaptivethresimg = cv2.adaptiveThreshold(gray_img, 255, cv2.ADAPTIVE_THR
 hist = cv2.reduce(gaussianadaptivethresimg,1,cv2.REDUCE_AVG).reshape(-1)
 # thist = cv2.reduce(gaussianadaptivethresimg,0,cv2.REDUCE_AVG).reshape(-1)
 
-print("herer")
+# print("herer")
 th=0
 # print (hist)
 H,W = img.shape[:2]
@@ -64,8 +64,8 @@ for y in lowers:
 
 rows = deque()
 characters = deque()
-print (uppers)
-print (lowers)
+# print (uppers)
+# print (lowers)
 for y in range(0,uppers.__len__()):
     row = gray_img[uppers[y]:lowers[y],0:W]
     rows.append(row)
@@ -79,9 +79,9 @@ for y in range(0,rows.__len__()):
                                                         cv2.THRESH_BINARY_INV, 11, 2)
 
     rhist = cv2.reduce(gaussianadaptivethresrowimg,0,cv2.REDUCE_AVG).reshape(-1)
-    cv2.imshow(y.__str__()+"tres",gaussianadaptivethresrowimg)
+    # cv2.imshow(y.__str__()+"tres",gaussianadaptivethresrowimg)
     RH,RW = row.shape[:2]
-    print(row.shape[:2])
+    # print(row.shape[:2])
     rth = 2
     lefts = [x for x in range (RW-1) if(rhist[x]<=rth) and rhist[x+1]>rth ]
     rights = [x for x in range (RW-1) if(rhist[x]>rth) and rhist[x+1]<=rth ]
@@ -96,30 +96,65 @@ for y in range(0,rows.__len__()):
 
     for x in rights:
         cv2.line(row, ( x, 0), (x, RH),  (0,255,0) , 1)
-    cv2.imshow(y.__str__(),row)
+    # cv2.imshow(y.__str__(),row)
 
 
     for x in range(0,lefts.__len__()):
         rh,rw = row.shape[:2]
-        print(row.shape[:2])
+        # print(row.shape[:2])
         char = row[0:rh,lefts[x] :rights[x]]
         if(y==2):characters.append(char)
         # cv2.imshow(x.__str__()+"C",char)
 
 chimg = characters.__getitem__(0)
 cpchimg = np.array(chimg,copy=True)
-cv2.imshow("copy ",cpchimg)
+# cv2.imshow("copy ",cpchimg)
 
-ccvh,ccvw = cpchimg.shape[:2]
-st = ccvw/2
-for y in range(ccvh):
-    for x in range(0)
+ym,xm = cpchimg.shape
+
+mask = np.ones(cpchimg.shape,cpchimg.dtype) * 255
+
+for j in range(1,ym-1):
+    start = -1;
+    end = -1;
+    for i in range(1,xm-1):
+        if( start==-1):
+            # print cpchimg[j]
+            timg = cv2.adaptiveThreshold(cpchimg, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
+                                         cv2.THRESH_BINARY_INV, 11, 2)
+            # print timg[j,:]
+            cv2.imshow("chad",timg)
+            if( timg[j,i]==255 and timg[j,i+1]==0):
+                start = i+1
+                # print ("sum ",su)
+        else:
+            if ( timg [j,i] ==0 and timg[j,i+1]==255 ):
+                end = i
+                resp = timg[j,start:end]
+                # print ("resp ",resp)
+                su = np.sum(timg[2:j+1,i:i+1])
+                cont = False
+                if(j>0):
+                    cont = np.isin(0,mask[j-1,start:end])
+                if(su<=500 or cont):
+                    print ("row : ",j," st : ",start," en : ",end)
+                    mask[j,start:end] = np.zeros(resp.shape,resp.dtype)
+                # print ("alt ",timg[j,start:end])
+                start =-1
+                end = -1
+                # print ("row : ",j," st : ",start," en : ",end)
+
+
+# ccvh,ccvw = cpchimg.shape[:2]
+# st = ccvw/2
+# for y in range(ccvh):
+#     for x in range(0)
 
 
 # cv2.namedWindow("final ",cv2.WINDOW_NORMAL)
 # cv2.namedWindow("final",cv2.WINDOW_NORMAL)
 cv2.imshow("final",gray_img)
-
+cv2.imshow("cpchar",mask)
 cv2.resizeWindow("final",600,300)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
